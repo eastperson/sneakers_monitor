@@ -17,20 +17,22 @@ class Product(
     var month:Int?,
     var day:Int?,
     var hour:Int?,
+    var image:String?,
     var brand:Brand?,
     var date:String = "",
     var launch:Boolean = true) {
 
-    constructor (title:String, productId:String, url:String, brand:Brand) : this(
-        null, title, productId, url, null, null, null, null, null, brand
+    constructor (title:String, productId:String, url:String, image:String, brand:Brand) : this(
+        null, title, productId, url, null, null, null, null, null, null, brand
     ) {
         this.title = title
         this.productId = productId
         this.url = url
+        this.image = image
         this.brand = brand
     }
 
-    constructor() : this(null, null, null, null, null, null, null, null, null, null)
+    constructor() : this(null, null, null, null, null, null, null, null, null, null, null)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

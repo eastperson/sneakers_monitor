@@ -6,6 +6,7 @@ import com.sneakers_monitor.crawler.repository.ProductRepository
 import com.sneakers_monitor.crawler.service.Crawler
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.transaction.Transactional
@@ -45,7 +46,9 @@ class NikeCrawler (
             val href = host + it.attr("href")
             val productId = it.attr("data-tag-pw-rank-product-id")
             val title = it.attr("title")
-            products.add(Product(title, productId, href, Brand.NIKE))
+            val image:Element? = it.getElementsByTag("img").first()
+
+            products.add(Product(title, productId, href, image?.attr("data-src") ?: "", Brand.NIKE))
         }
         detailCrawl(products)
         nikeProductAppend.addAll(products)
