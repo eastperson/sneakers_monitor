@@ -10,7 +10,7 @@ plugins {
 
 group = "com.sneakers_monitor"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_17
+java.sourceCompatibility = JavaVersion.VERSION_14
 
 repositories {
     mavenCentral()
@@ -50,4 +50,11 @@ tasks.test {
 tasks.asciidoctor {
     inputs.dir(snippetsDir)
     dependsOn(tasks.test)
+}
+
+tasks.bootJar {
+    archiveBaseName.set("sneakers-monitor-crawler")
+    archiveFileName.set("sneakers-monitor-crawler-staging.jar")
+    archiveVersion.set("0.0.0")
+    mainClass.set("com.sneakers_monitor.crawler.CrawlerApplication.kt")
 }
