@@ -30,6 +30,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.14.3")
     runtimeOnly("com.h2database:h2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.6.6")
+    testImplementation("io.mockk:mockk:1.12.3")
 }
 
 tasks.withType<KotlinCompile> {
