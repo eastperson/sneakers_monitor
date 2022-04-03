@@ -2,16 +2,16 @@ package com.sneakers_monitor.crawler.service.nike
 
 import com.sneakers_monitor.crawler.domain.Brand
 import com.sneakers_monitor.crawler.domain.Product
-import com.sneakers_monitor.crawler.repository.ProductRepository
 import com.sneakers_monitor.crawler.service.Crawler
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.util.*
+import java.util.stream.Collectors
 import javax.transaction.Transactional
 
-@Component
+@Service
 class NikeCrawler (
     val nikeProductAppend: NikeProductAppend
 ) : Crawler {
@@ -21,7 +21,7 @@ class NikeCrawler (
     private val queryString: List<Pair<String, String>> = listOf(Pair("s","upcoming"))
 
     private fun getUrl(): String {
-        var sj = StringJoiner("&")
+        val sj = StringJoiner("&")
         for (pair in queryString) {
             sj.add("${pair.first}=${pair.second}")
         }
@@ -38,7 +38,7 @@ class NikeCrawler (
     }
 
     @Transactional
-    override fun crawl() {
+    override fun crawl(): CrawlingData.Response {
         var products = hashSetOf<Product>()
         val body = getDocument().body()
         val elements = body.select(".item-list-wrap.upcoming-section li a.card-link")
@@ -52,6 +52,8 @@ class NikeCrawler (
         }
         detailCrawl(products)
         nikeProductAppend.addAll(products)
+        val productDtoList = products.stream().map { ProductDto(it) }.collect(Collectors.toList())
+        return CrawlingData.Response(productDtoList)
     }
 
     private fun detailCrawl(products: Set<Product>) {
@@ -86,4 +88,45 @@ class NikeCrawler (
             }
         }
     }
+}
+
+data class CrawlingData(val id:Int) {
+
+    class Request
+    class Response(data:MutableList<ProductDto>){
+        val data = data
+        val size:Int = data.size
+    }
+}
+
+data class ProductDto (
+    val id:Long?,
+    val title: String?,
+    val productId:String?,
+    val url:String?,
+    val color:String?,
+    val price:String?,
+    val month:Int?,
+    val day:Int?,
+    val hour:Int?,
+    val image:String?,
+    val brand:Brand?,
+    val date:String,
+    val launch:Boolean
+) {
+    constructor(product: Product): this (
+        product.id,
+        product.title,
+        product.productId,
+        product.url,
+        product.color,
+        product.price,
+        product.month,
+        product.day,
+        product.hour,
+        product.image,
+        product.brand,
+        product.date,
+        product.launch
+    )
 }
