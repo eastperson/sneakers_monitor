@@ -19,11 +19,11 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
         
-      - name: crawler requets
+      - name: crawler request
         id: nike
         uses: fjogeleit/http-request-action@v1
         with:
-            url: 'https://jsonplaceholder.typicode.com/posts'
+            url: 'https://jsonplaceholder.typicode.com/posts/1'
             method: 'GET'
       - name: Show Response
         run: echo ${{ steps.nike.outputs.response }}
