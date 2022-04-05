@@ -2,17 +2,20 @@ package com.sneakers_monitor.crawler.service.nike
 
 import com.sneakers_monitor.crawler.domain.Brand
 import com.sneakers_monitor.crawler.domain.Product
+import com.sneakers_monitor.crawler.slack.SlackSender
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 import java.util.*
 import java.util.stream.Collectors
 import javax.transaction.Transactional
 
 @Service
 class NikeCrawlerImpl (
-    val nikeProductAppend: NikeProductAppend
+    val nikeProductAppend: NikeProductAppend,
+    val slackSender:SlackSender
 ) : NikeCrawler {
 
     private val host: String = "https://www.nike.com"
@@ -52,6 +55,7 @@ class NikeCrawlerImpl (
         detailCrawl(products)
         nikeProductAppend.addAll(products)
         val productDtoList = products.stream().map { ProductDto(it) }.collect(Collectors.toList())
+        slackSender.send(productDtoList.filter{it.date?.isBefore(LocalDateTime.now().plusDays(7))?:false}.sortedBy { it.date }.stream().collect(Collectors.toList()), Brand.NIKE)
         return CrawlingData.Response(productDtoList)
     }
 
@@ -69,20 +73,17 @@ class NikeCrawlerImpl (
             it.color = color?.text() ?: ""
             it.price = price?.text() ?: ""
             it.price = price?.text() ?: ""
-            it.date = date?.text() ?: ""
-            if (it.date.isNotBlank() && it.date.contains("출시 예정")) {
-                val date = it.date
-                val month = date.substring(0, date.indexOf("월")).trim()
-                val day = date.substring(date.indexOf("월") + 1, date.indexOf("일")).trim()
-                val hour = date.substring(date.indexOf("시") - 2, date.indexOf("시")).trim()
-
-                it.month = month.toInt()
-                it.day = day.toInt()
-                if (date.contains("오전")) {
-                    it.hour = hour.toInt()
-                } else if (date.contains("오후")) {
-                    it.hour = hour.toInt() + 12
+            val dateStr = date?.text() ?: ""
+            if (dateStr.isNotBlank() && dateStr.contains("출시 예정")) {
+                val month = dateStr.substring(0, dateStr.indexOf("월")).trim()
+                val day = dateStr.substring(dateStr.indexOf("월") + 1, dateStr.indexOf("일")).trim()
+                var hour = dateStr.substring(dateStr.indexOf("시") - 2, dateStr.indexOf("시")).trim().toInt()
+                if (dateStr.contains("오전")) {
+                    hour = hour
+                } else if (dateStr.contains("오후")) {
+                    hour += 12
                 }
+                it.date = LocalDateTime.of(LocalDateTime.now().year, month.toInt(), day.toInt(), hour, 0)
                 it.launch = false
             }
         }
@@ -105,12 +106,9 @@ data class ProductDto (
     val url:String?,
     val color:String?,
     val price:String?,
-    val month:Int?,
-    val day:Int?,
-    val hour:Int?,
     val image:String?,
     val brand:Brand?,
-    val date:String,
+    val date:LocalDateTime?,
     val launch:Boolean
 ) {
     constructor(product: Product): this (
@@ -120,9 +118,6 @@ data class ProductDto (
         product.url,
         product.color,
         product.price,
-        product.month,
-        product.day,
-        product.hour,
         product.image,
         product.brand,
         product.date,
