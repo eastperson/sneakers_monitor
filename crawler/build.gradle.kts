@@ -63,5 +63,4 @@ tasks.bootJar {
     archiveBaseName.set("sneakers-monitor-crawler")
     archiveFileName.set("sneakers-monitor-crawler-staging.jar")
     archiveVersion.set("0.0.0")
-    mainClass.set("com.sneakers_monitor.crawler.CrawlerApplication.kt")
 }
