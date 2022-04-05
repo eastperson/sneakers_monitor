@@ -31,6 +31,12 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.6.6")
     testImplementation("io.mockk:mockk:1.12.3")
+
+    // Slack Block Kit
+    implementation("com.slack.api:slack-api-client:1.8.1")
+    implementation("com.slack.api:slack-api-model:1.8.1")
+    implementation("com.slack.api:slack-app-backend:1.8.1")
+    implementation("com.squareup.okhttp3:okhttp:4.2.2")
 }
 
 tasks.withType<KotlinCompile> {
