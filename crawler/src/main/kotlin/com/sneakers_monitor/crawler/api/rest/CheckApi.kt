@@ -15,6 +15,7 @@ class CheckApi {
 
     @GetMapping("")
     fun nikeCrawler():ResponseEntity<*> {
+        println("Response : check")
         return ResponseEntity.ok(ApiResponse.success(body = "OK"))
     }
 }
