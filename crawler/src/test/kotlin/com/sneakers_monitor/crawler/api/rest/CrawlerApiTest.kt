@@ -1,4 +1,4 @@
-package com.sneakers_monitor.api.rest
+package com.sneakers_monitor.crawler.api.rest
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.ObjectMapper

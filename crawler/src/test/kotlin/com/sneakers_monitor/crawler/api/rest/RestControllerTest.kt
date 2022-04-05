@@ -1,10 +1,9 @@
-package com.sneakers_monitor.api.rest
+package com.sneakers_monitor.crawler.api.rest
 
 import com.sneakers_monitor.crawler.CrawlerApplication
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.TestConstructor
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder

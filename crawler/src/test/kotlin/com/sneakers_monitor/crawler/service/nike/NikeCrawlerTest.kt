@@ -4,10 +4,6 @@ import com.sneakers_monitor.crawler.repository.ProductRepository
 import com.sneakers_monitor.crawler.service.Crawler
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.DisplayName
-import org.mockito.Mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Profile
@@ -22,9 +18,8 @@ internal class NikeCrawlerTest {
     @Autowired
     lateinit var productRepository: ProductRepository
 
-    @DisplayName("크롤링 테스트_성공")
     @Test
-    fun crawl() {
+    fun `페이지의 모든 정보를 크롤링하고 데이터를 저장하고 앞으로 3일치 슬랙을 보낸다`() {
         val beforeSize = productRepository.findAll().size
         crawler.crawl()
         val afterSize = productRepository.findAll().size
