@@ -1,5 +1,7 @@
 package com.sneakers_monitor.crawler.domain
 
+import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -14,16 +16,13 @@ class Product(
     var url:String?,
     var color:String?,
     var price:String?,
-    var month:Int?,
-    var day:Int?,
-    var hour:Int?,
     var image:String?,
     var brand:Brand?,
-    var date:String = "",
+    var date: LocalDateTime?,
     var launch:Boolean = true) {
 
     constructor (title:String, productId:String, url:String, image:String, brand:Brand) : this(
-        null, title, productId, url, null, null, null, null, null, null, brand
+        null, title, productId, url, null, null, null, brand, null
     ) {
         this.title = title
         this.productId = productId
@@ -32,7 +31,7 @@ class Product(
         this.brand = brand
     }
 
-    constructor() : this(null, null, null, null, null, null, null, null, null, null, null)
+    constructor() : this(null, null, null, null, null, null, null, null, null)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -50,6 +49,7 @@ class Product(
     }
 
     override fun toString(): String {
-        return "Product(title='$title', productId='$productId', url='$url', color='$color', price='$price', date='$date', month=$month, day=$day, hour=$hour)"
+        return "Product(id=$id, title=$title, productId=$productId, url=$url, color=$color, price=$price, image=$image, brand=$brand, date=$date, launch=$launch)"
     }
+
 }
