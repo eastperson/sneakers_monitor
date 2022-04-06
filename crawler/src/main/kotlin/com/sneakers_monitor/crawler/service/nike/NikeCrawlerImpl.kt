@@ -55,7 +55,7 @@ class NikeCrawlerImpl (
         detailCrawl(products)
         nikeProductAppend.addAll(products)
         val productDtoList = products.stream().map { ProductDto(it) }.collect(Collectors.toList())
-        slackSender.send(productDtoList.filter{it.date?.isBefore(LocalDateTime.now().plusDays(7))?:false}.sortedBy { it.date }.stream().collect(Collectors.toList()), Brand.NIKE)
+        slackSender.send(productDtoList.filter{it.date?.isBefore(LocalDateTime.now().plusDays(3))?:false}.sortedBy { it.date }.stream().collect(Collectors.toList()), Brand.NIKE)
         return CrawlingData.Response(productDtoList)
     }
 
