@@ -23,7 +23,7 @@ jobs:
         id: nike
         uses: fjogeleit/http-request-action@v1
         with:
-            url: 'https://jsonplaceholder.typicode.com/posts/1'
+            url: 'http://13.125.234.52:8080/api/crawl/nike'
             method: 'GET'
       - name: Show Response
         run: echo ${{ steps.nike.outputs.response }}
